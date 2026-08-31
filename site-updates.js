@@ -61,9 +61,20 @@ setPage('contact', `
   <h2>把你的想法<br />交给我们。</h2>
   <p>咨询时请附上<strong>研究主题及预计交稿时间</strong>。如已有视觉偏好，也欢迎提供<strong>参考图片、风格方向或初步想法</strong>，方便我们更快了解你的需求。</p>
   <div class="contact-list">
-    <p>微信：SyrupTablets</p>
+    <p>微信：<button type="button" class="wechat-link" data-wechat-qr>SyrupTablets</button></p>
+    <p>WhatsApp：<a href="https://wa.me/8615882410847" target="_blank" rel="noopener">+86 15882410847 ↗</a></p>
     <p>小红书：金鱼游过星期五</p>
     <a href="mailto:ourfridaygoldfish@gmail.com">邮箱：ourfridaygoldfish@gmail.com ↗</a>
     <p>电话：+31 6 14296059</p>
   </div>
 `);
+
+const wechatQrDialog = document.createElement('dialog');
+wechatQrDialog.className = 'wechat-qr-dialog';
+wechatQrDialog.innerHTML = `<button type="button" class="wechat-qr-close" aria-label="关闭二维码">×</button><img src="assets/wechat-qr.jpg" alt="SyrupTablets 的微信二维码" /><p>微信扫码添加 SyrupTablets</p><a href="assets/wechat-qr.jpg" download="SyrupTablets-WeChat-QR.jpg">保存二维码 ↓</a>`;
+document.body.append(wechatQrDialog);
+document.addEventListener('click', (event) => {
+  if (event.target.closest('[data-wechat-qr]')) wechatQrDialog.showModal();
+  if (event.target.closest('.wechat-qr-close')) wechatQrDialog.close();
+});
+wechatQrDialog.addEventListener('click', (event) => { if (event.target === wechatQrDialog) wechatQrDialog.close(); });
