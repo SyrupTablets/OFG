@@ -6,6 +6,7 @@ const closePanel = document.querySelector('#close-panel');
 const track = document.querySelector('#track');
 const marquee = document.querySelector('#marquee');
 const navigation = document.querySelector('.nav');
+const brand = document.querySelector('.brand');
 const mobileMenuButton = document.createElement('button');
 mobileMenuButton.className = 'mobile-menu-button';
 mobileMenuButton.type = 'button';
@@ -23,6 +24,18 @@ navigation.querySelector('.nav-links').addEventListener('click', () => {
   navigation.classList.remove('menu-open');
   mobileMenuButton.textContent = 'MENU';
   mobileMenuButton.setAttribute('aria-expanded', 'false');
+});
+brand.addEventListener('click', (event) => {
+  if (!window.matchMedia('(max-width: 760px)').matches) return;
+  const openProjectModal = document.querySelector('#project-modal:not([hidden])');
+  if (panel.hidden && !openProjectModal) return;
+  event.preventDefault();
+  closePage();
+  if (openProjectModal) openProjectModal.hidden = true;
+  activeProject = null;
+  document.body.classList.remove('project-open');
+  document.body.style.overflow = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 const escapeHtml = (value) => value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[char]);
 
@@ -115,7 +128,7 @@ function openPage(name) { panel.hidden = false; document.querySelectorAll('.page
 function closePage() { panel.hidden = true; document.body.style.overflow = ''; }
 document.querySelectorAll('[data-page]').forEach((button) => button.addEventListener('click', () => openPage(button.dataset.page)));
 closePanel.addEventListener('click', closePage);
-document.addEventListener('keydown', (event) => { if (event.key === 'Escape') { closePage(); document.querySelector('#project-modal')?.setAttribute('hidden', ''); activeProject = null; } });
+document.addEventListener('keydown', (event) => { if (event.key === 'Escape') { closePage(); document.querySelector('#project-modal')?.setAttribute('hidden', ''); activeProject = null; document.body.classList.remove('project-open'); } });
 
 const articleModal = document.createElement('section'); articleModal.id = 'project-modal'; articleModal.className = 'project-modal'; articleModal.hidden = true; document.body.append(articleModal);
 let activeProject = null;
@@ -188,7 +201,7 @@ function openProject(project) {
     articleModal.style.setProperty('--project-title-size', `${titleSize}px`);
   });
   extractProjectPalette(project.images[0], project.color);
-  articleModal.hidden = false; document.body.style.overflow = 'hidden'; articleModal.querySelector('.project-close').addEventListener('click', () => { articleModal.hidden = true; activeProject = null; document.body.style.overflow = ''; });
+  articleModal.hidden = false; document.body.classList.add('project-open'); document.body.style.overflow = 'hidden'; articleModal.querySelector('.project-close').addEventListener('click', () => { articleModal.hidden = true; activeProject = null; document.body.classList.remove('project-open'); document.body.style.overflow = ''; });
   articleModal.onscroll = () => articleModal.style.setProperty('--project-scroll', `${Math.min(articleModal.scrollTop, 520)}px`);
 }
 window.refreshOpenProjectLanguage = () => { if (activeProject && !articleModal.hidden) openProject(activeProject); };
