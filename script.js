@@ -4,6 +4,7 @@ const home = document.querySelector('#home');
 const panel = document.querySelector('#panel');
 const closePanel = document.querySelector('#close-panel');
 const track = document.querySelector('#track');
+const marquee = document.querySelector('#marquee');
 const navigation = document.querySelector('.nav');
 const mobileMenuButton = document.createElement('button');
 mobileMenuButton.className = 'mobile-menu-button';
@@ -29,6 +30,7 @@ const escapeHtml = (value) => value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;
 let marqueeSpeed = 1;
 let marqueeTargetSpeed = 1;
 let marqueeSpeedFrame = null;
+let suppressProjectClick = false;
 const updateMarqueeSpeed = () => {
   marqueeSpeed += (marqueeTargetSpeed - marqueeSpeed) * .14;
   track.getAnimations().forEach((animation) => { animation.playbackRate = marqueeSpeed; });
@@ -48,6 +50,65 @@ if (window.matchMedia('(pointer: fine)').matches && !window.matchMedia('(prefers
     setMarqueeSpeed(1 + edgeStrength * 2.2);
   });
   window.addEventListener('blur', () => setMarqueeSpeed(1));
+}
+
+// On phones, the duplicated work shelf can be swiped directly instead of waiting for the auto-scroll.
+if (window.matchMedia('(max-width: 760px)').matches && window.PointerEvent) {
+  let activePointerId = null;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let dragOffset = 0;
+  let hasDragged = false;
+  const normaliseOffset = (offset) => {
+    const loopWidth = track.scrollWidth / 2;
+    if (!loopWidth) return offset;
+    while (offset > 0) offset -= loopWidth;
+    while (offset <= -loopWidth) offset += loopWidth;
+    return offset;
+  };
+  const getTranslateX = () => {
+    const transform = getComputedStyle(track).transform;
+    if (!transform || transform === 'none') return 0;
+    return new DOMMatrixReadOnly(transform).m41;
+  };
+  const resumeAutoScroll = () => {
+    const loopWidth = track.scrollWidth / 2;
+    const duration = parseFloat(getComputedStyle(track).animationDuration) || 115;
+    const progress = loopWidth ? ((-dragOffset % loopWidth) + loopWidth) % loopWidth / loopWidth : 0;
+    track.style.animationDelay = `${-progress * duration}s`;
+    track.style.transform = '';
+    track.classList.remove('is-dragging');
+  };
+  marquee.addEventListener('pointerdown', (event) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    activePointerId = event.pointerId;
+    dragStartX = event.clientX;
+    dragStartY = event.clientY;
+    dragOffset = getTranslateX();
+    hasDragged = false;
+    track.classList.add('is-dragging');
+    track.style.transform = `translate(${dragOffset}px, -50%)`;
+    marquee.setPointerCapture?.(event.pointerId);
+  });
+  marquee.addEventListener('pointermove', (event) => {
+    if (event.pointerId !== activePointerId) return;
+    const distanceX = event.clientX - dragStartX;
+    const distanceY = event.clientY - dragStartY;
+    if (Math.abs(distanceX) > 6) hasDragged = true;
+    if (hasDragged && Math.abs(distanceX) > Math.abs(distanceY)) event.preventDefault();
+    dragOffset = normaliseOffset(getTranslateX() + distanceX);
+    dragStartX = event.clientX;
+    dragStartY = event.clientY;
+    track.style.transform = `translate(${dragOffset}px, -50%)`;
+  }, { passive: false });
+  const finishDrag = (event) => {
+    if (event.pointerId !== activePointerId) return;
+    if (hasDragged) suppressProjectClick = true;
+    resumeAutoScroll();
+    activePointerId = null;
+  };
+  marquee.addEventListener('pointerup', finishDrag);
+  marquee.addEventListener('pointercancel', finishDrag);
 }
 
 function openPage(name) { panel.hidden = false; document.querySelectorAll('.page').forEach((page) => { page.hidden = page.id !== name; }); document.body.style.overflow = 'hidden'; }
@@ -152,7 +213,7 @@ fetch('projects.json').then((response) => response.json()).then((projects) => {
   projects.sort((a, b) => getHueOrder(a.color) - getHueOrder(b.color));
   const cards = [...projects, ...projects].map((project, index) => `<article class="book-wrap"><button class="book" type="button" data-project="${project.id}" style="background:${project.color};--frame-colour:${getFrameColour(project.color)}" aria-label="查看项目"><img src="${project.images[0]}" alt="${escapeHtml(project.title)}" loading="${index < 8 ? 'eager' : 'lazy'}" decoding="async" /><span>${String((index % projects.length) + 1).padStart(2, '0')} / OFG</span></button></article>`).join('');
   track.innerHTML = cards;
-  track.addEventListener('click', (event) => { const button = event.target.closest('[data-project]'); if (button) openProject(projects.find((project) => project.id === button.dataset.project)); });
+  track.addEventListener('click', (event) => { if (suppressProjectClick) { suppressProjectClick = false; return; } const button = event.target.closest('[data-project]'); if (button) openProject(projects.find((project) => project.id === button.dataset.project)); });
 });
 
 const about = document.querySelector('#about');

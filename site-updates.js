@@ -11,7 +11,7 @@ setPage('about', `
       <section class="mondrian-cell about-red"><p>研究、出版<br />与视觉表达。</p></section>
       <section class="mondrian-cell about-yellow"><p>让想法在这里<br />一起游动。</p></section>
       <section class="mondrian-cell about-white about-invoice"><p>可开发票，与荷兰知名大学各博士项目组已有过长期合作，博士组可向组内提交封面设计经费报销。</p></section>
-      <section class="mondrian-cell about-blue"><p class="about-eyebrow">WHY “OUR FRIDAY GOLDFISH”?</p><h3>有些名字先出现，<br />意义随后才慢慢游来。</h3><p class="about-quote">“Put any two random words together and there’s a 70% chance it’s a band name, and a 30% chance it means absolutely nothing.”</p><p>Our Friday Goldfish Studio 源于这句玩笑话。设计也从看似无关的研究、字句、颜色与物件中出发，捕捉偶然的连接，再通过概念、版式与图像，让它们成为清晰、动人且真正属于你的表达。</p></section>
+      <section class="mondrian-cell about-blue"><p class="about-eyebrow">WHY “OUR FRIDAY GOLDFISH”?</p><h3>有些名字先出现，<br />意义随后才慢慢游来。</h3><p class="about-quote" lang="en">"Put any two random words together and there's a 70% chance it's a band name, and a 30% chance it means absolutely nothing."</p><p>Our Friday Goldfish Studio 源于这句玩笑话。设计也从看似无关的研究、字句、颜色与物件中出发，捕捉偶然的连接，再通过概念、版式与图像，让它们成为清晰、动人且真正属于你的表达。</p></section>
       <div class="mondrian-cell about-black" aria-hidden="true"></div>
     </div>
     <p class="about-hint">HOVER THE COLOUR BLOCKS · SCROLL TO SHIFT THE COMPOSITION</p>
