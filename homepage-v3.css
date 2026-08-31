@@ -1,0 +1,73 @@
+/* Homepage hierarchy: a compact mark, small background logo, and a dominant work shelf. */
+.nav {
+  min-height: 92px;
+  padding: 0 3.4vw;
+  justify-content: center;
+}
+
+.nav .brand {
+  display: block;
+  position: absolute;
+  left: 3.4vw;
+  top: 16px;
+  width: 60px;
+  height: 60px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: #fff url('assets/ofg-mark.png') center / 104% auto no-repeat;
+  color: transparent;
+  overflow: hidden;
+}
+
+.nav .brand::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+.nav .nav-mail { display: none !important; }
+.language-switch {
+  position: absolute !important;
+  right: 3.4vw !important;
+  top: 25px !important;
+  margin: 0 !important;
+  min-width: 96px;
+}
+
+.hero-logo {
+  top: 14% !important;
+  width: min(32vw, 460px) !important;
+  max-height: 29vh !important;
+  z-index: 1 !important;
+}
+
+.marquee {
+  top: 66% !important;
+  height: min(49vw, 525px) !important;
+  z-index: 4 !important;
+}
+.marquee-track { padding: 28px 0 !important; }
+.book-wrap { width: 285px !important; height: 285px !important; margin-right: -108px !important; }
+.book { width: 285px !important; height: 285px !important; }
+.book img { object-fit: contain !important; background: transparent !important; }
+.book-wrap:has(.book:hover) { margin-left: 52px !important; }
+.book-wrap:has(+ .book-wrap .book:hover) { margin-right: -56px !important; }
+
+.page .download {
+  display: inline-flex;
+  align-items: center;
+  min-height: 50px;
+  padding: 12px 19px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.contact-list { display: grid; gap: 16px; margin: 28px 0; font-size: 16px; line-height: 1.5; }
+.contact-list > * { margin: 0; }
+.contact-list a { color: inherit; text-underline-offset: 3px; }
+
+@media (max-width: 760px) {
+  .nav { min-height: 78px; padding: 0 5vw; }
+  .nav .brand { left: 5vw; top: 14px; width: 47px; height: 47px; }
+  .language-switch { right: 5vw !important; top: 20px !important; min-width: 77px; font-size: 11px; }
+  .nav-links { gap: 13px; margin: 0 78px; }
+  .nav-links button { font-size: 12px; }
+  .hero-logo { top: 15% !important; width: 56vw !important; max-height: 23vh !important; }
+  .marquee { top: 67% !important; height: 310px !important; width: 210vw !important; }
+  .book-wrap { width: 168px !important; height: 168px !important; margin-right: -66px !important; }
+  .book { width: 168px !important; height: 168px !important; }
+}

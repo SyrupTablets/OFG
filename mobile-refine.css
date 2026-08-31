@@ -1,0 +1,87 @@
+/* Phone layout: retain the composition while making every route and project readable. */
+.mobile-menu-button { display:none; }
+
+@media (max-width: 760px) {
+  html, body { min-width: 0; overflow-x: hidden; }
+  .nav { min-height: 116px; height: 116px; position: relative; z-index: 25; }
+  .nav .brand { width: 48px; height: 48px; top: 13px; }
+  .language-switch { top: 19px !important; min-width: 77px !important; }
+  .mobile-menu-button { display: none !important; }
+  .nav-links,
+  .nav.menu-open .nav-links {
+    position: absolute;
+    top: 75px;
+    left: 0;
+    right: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    transform: none;
+    border-top: 1.5px solid var(--ink);
+    background: var(--paper) !important;
+    box-shadow: none;
+  }
+  .nav-links button,
+  .nav.menu-open .nav-links button {
+    min-height: 40px;
+    padding: 8px 3px;
+    border: 0;
+    border-right: 1.5px solid var(--ink);
+    border-radius: 0;
+    background: var(--paper) !important;
+    color: var(--ink);
+    font: 11px "Noto Sans SC", sans-serif;
+    white-space: nowrap;
+  }
+  .nav-links button:last-child,
+  .nav.menu-open .nav-links button:last-child { border-right: 0; }
+
+  .hero { height: calc(100svh - 116px); min-height: 550px; }
+  .hero-logo { top: 14% !important; width: min(62vw, 260px) !important; max-height: 22vh !important; }
+  .hero:before { top: 34% !important; }
+  .hero:after { height: 30% !important; }
+  .marquee { top: 64% !important; height: 220px !important; width: 240vw !important; }
+  .marquee-track { padding: 16px 0 !important; }
+  .book-wrap, .book { width: 156px !important; height: 156px !important; }
+  .book-wrap { margin-right: -61px !important; }
+  .book span { font-size: 7px !important; left: 6px !important; bottom: 6px !important; }
+  .book-wrap:has(.book:hover) { margin-left: 25px !important; }
+  footer { padding: 11px 12px; font-size: 6.5px; white-space: nowrap; overflow: hidden; }
+
+  .panel { padding: 92px 6vw 66px; }
+  .close { position: fixed; z-index: 30; width: 37px; height: 37px; font-size: 24px; }
+  .page { max-width: none; }
+  .page > p, .page li { max-width: none; font-size: 14px; line-height: 1.85; }
+  .page h2 { font-size: clamp(39px, 12vw, 58px); margin: 17px 0 25px; }
+  .price { width: 100%; gap: 10px; padding: 11px 14px; }
+  .price b { font-size: 48px; }
+  .price span { font-size: 9px; }
+  .contact-list { gap: 13px; font-size: 14px; overflow-wrap: anywhere; }
+  .about-title { font-size: clamp(26px, 8vw, 35px) !important; }
+  .about-grid { min-width: 0 !important; }
+  .about-grid p { overflow-wrap: anywhere; }
+
+  .project-modal { padding: 0 0 48px; }
+  .project-article { max-width: none; }
+  .project-hero { min-height: 570px; }
+  .project-mondrian { bottom: 43%; }
+  .project-hero-copy { left: 6vw !important; right: 5vw; bottom: 7vh !important; max-width: 89vw !important; }
+  .project-title-prefix, .project-title-name { white-space: normal; }
+  .project-title-prefix { font-size: max(.7em, 17px); }
+  .project-title-name { line-height: 1.03; }
+  .project-scroll-cue { margin-top: 11px !important; font-size: 10px; }
+  .project-detail { padding: 0 6vw !important; }
+  .project-detail-head { min-height: 64px; }
+  .project-copy { font-size: 14px; line-height: 1.9; overflow-wrap: anywhere; }
+  .project-gallery { grid-template-columns: 1fr; gap: 12px; }
+  .project-gallery figure:first-child { grid-column: auto; }
+  .project-gallery img { max-height: none; }
+}
+
+@media (max-width: 360px) {
+  .nav .brand { width: 43px; height: 43px; top: 16px; }
+  .nav-links button, .nav.menu-open .nav-links button { font-size: 10px; }
+  .marquee { width: 265vw !important; }
+  .book-wrap, .book { width: 144px !important; height: 144px !important; }
+}

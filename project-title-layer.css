@@ -1,0 +1,14 @@
+/* A solid reading field keeps the title above the moving colour composition. */
+.project-hero-copy{z-index:7!important;left:8vw!important;bottom:7vh!important;max-width:82vw!important;padding:0!important;background:transparent!important;color:#fff!important;box-shadow:none!important;mix-blend-mode:difference}.project-hero-copy h2{display:flex;flex-direction:column;gap:.08em;margin:0!important;font-size:var(--project-title-size,clamp(28px,4.7vw,78px))!important;text-shadow:none!important}.project-title-prefix,.project-title-name{display:block;white-space:nowrap}.project-title-prefix{font-size:.62em;letter-spacing:-.045em}.project-title-name{font-size:1em;letter-spacing:-.075em}.project-hero-copy .project-meta{display:none}.project-scroll-cue{margin:13px 0 0!important;background:transparent!important;display:block!important;padding:0!important}@media(max-width:760px){.project-hero-copy{left:6vw!important;bottom:7vh!important;padding:0!important}.project-title-prefix{font-size:.72em}}
+
+/* Let the top and bottom panels share the same border instead of drawing a second offset line. */
+.project-mondrian::before{display:none!important}
+.project-mondrian,.project-mondrian::after{border-bottom:0!important}
+.project-mondrian::after{display:none!important}
+.project-mondrian i:nth-child(1),.project-mondrian i:nth-child(3),.project-mondrian i:nth-child(4){border-bottom-width:0!important}
+.project-mondrian i:nth-child(5){border-top-width:0!important}
+.project-detail-head{display:flex;align-items:center;min-height:86px;margin:0 0 5px}.project-published{display:inline-flex;align-items:center;width:max-content;min-height:44px;padding:9px 13px;border:2px solid #111112;background:#fff;color:#111112;font:11px "DM Mono",monospace;letter-spacing:.07em}.project-detail .project-copy{margin-top:0!important}@media(max-width:760px){.project-detail-head{min-height:66px}.project-published{min-height:38px;font-size:9px}}
+.project-language-note{max-width:650px;margin:0 0 20px;font:11px/1.6 "DM Mono",monospace;color:#555}
+
+/* One left-hand datum for title, date, and the article copy. */
+.project-hero-copy{left:8vw!important}.project-detail{padding-left:8vw!important}@media(max-width:760px){.project-hero-copy{left:6vw!important}.project-detail{padding-left:6vw!important}}

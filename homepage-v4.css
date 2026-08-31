@@ -1,0 +1,8 @@
+/* Final visual refinements: lighter work frames and one OFG mark across every view. */
+.hero-logo { top: 8% !important; background: transparent !important; }
+.nav .brand { border: 0 !important; background-size: 107% auto !important; }
+.book { border-width: 1.5px !important; border-color: var(--frame-colour, var(--ink)) !important; box-shadow: 5px 8px 0 rgba(17,17,18,.22), inset 3px 0 7px rgba(0,0,0,.22) !important; }
+.book span { border-width: 1.5px !important; }
+.price span { color: var(--red) !important; }
+.panel::before { width: 148px !important; height: 148px !important; border: 0 !important; border-radius: 50% !important; background: #fff url('assets/ofg-mark.png') center / 105% auto no-repeat !important; }
+@media(max-width:760px) { .hero-logo { top: 10% !important; }.panel::before { width: 90px !important; height: 90px !important; } }
