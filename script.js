@@ -133,6 +133,13 @@ const splitProjectTitle = (title) => {
   const position = divider.index;
   return [title.slice(0, position).trim(), title.slice(position + 1).trim()];
 };
+const titleColourFor = (colour) => {
+  const parts = colour.replace('#', '').match(/[a-f\d]{2}/gi);
+  if (!parts || parts.length !== 3) return '#111112';
+  const [red, green, blue] = parts.map((part) => parseInt(part, 16) / 255);
+  const luminance = .2126 * red + .7152 * green + .0722 * blue;
+  return luminance < .42 ? '#ffffff' : '#111112';
+};
 const extractProjectPalette = (src, fallback) => {
   const image = new Image();
   image.decoding = 'async';
@@ -169,6 +176,7 @@ function openProject(project) {
   const displayName = translatedProject?.title || projectName;
   const displayBody = translatedProject?.body || project.body;
   articleModal.style.setProperty('--project-colour', project.color);
+  articleModal.style.setProperty('--project-title-colour', titleColourFor(project.color));
   articleModal.style.setProperty('--project-colour-one', project.color);
   articleModal.style.setProperty('--project-colour-two', '#ffffff');
   articleModal.style.setProperty('--project-colour-three', '#111112');
