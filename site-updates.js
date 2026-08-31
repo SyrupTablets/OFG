@@ -30,7 +30,7 @@ panel.addEventListener('scroll', () => {
 });
 
 const englishProjectsScript = document.createElement('script');
-englishProjectsScript.src = 'english-projects.js?v=20260831-zh-en-fix';
+englishProjectsScript.src = 'english-projects.js?v=20260831-p04-copy-fix';
 englishProjectsScript.onload = () => { const localizationScript = document.createElement('script'); localizationScript.src = 'localization.js?v=20260831-zh-en-fix'; document.body.append(localizationScript); };
 document.body.append(englishProjectsScript);
 
