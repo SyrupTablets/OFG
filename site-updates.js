@@ -71,7 +71,6 @@ setPage('contact', `
     <p>WhatsApp：<a href="https://wa.me/8615882410847" target="_blank" rel="noopener">+86 15882410847 ↗</a></p>
     <p>小红书：金鱼游过星期五</p>
     <a href="mailto:ourfridaygoldfish@gmail.com">邮箱：ourfridaygoldfish@gmail.com ↗</a>
-    <p>电话：+31 6 14296059</p>
   </div>
 `);
 
