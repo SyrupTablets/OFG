@@ -53,8 +53,14 @@ setPage('services', `
 setPage('contract', `
   <p class="label">03 / CONTRACT</p>
   <h2>先说清楚，<br />才可以放心开始。</h2>
-  <a class="download" href="assets/ofg-design-service-agreement-bilingual.pdf" download="Our-Friday-Goldfish-Studio-Design-Service-Agreement.pdf">下载中英双语设计服务合同 PDF ↓</a>
+  <p>填写下列表单后，即可自动下载中英双语设计服务合同。</p>
+  <div class="contract-form"><iframe data-tally-src="https://tally.so/embed/q4lEkO?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="580" frameborder="0" marginheight="0" marginwidth="0" title="设计服务合同下载表单"></iframe></div>
 `);
+
+const tallyEmbedScript = document.createElement('script');
+tallyEmbedScript.src = 'https://tally.so/widgets/embed.js';
+tallyEmbedScript.async = true;
+document.body.append(tallyEmbedScript);
 
 setPage('contact', `
   <p class="label">04 / CONTACT</p>
