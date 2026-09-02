@@ -31,4 +31,9 @@
 
 @media (max-width:760px) {
   .hero-art-blocks { background-size:100% 100%; }
+  /* Keep the shelf inside a single phone viewport: its books remain easy to
+     scan and swipe, without the desktop-wide strip overflowing the composition. */
+  .hero { min-height:550px; height:calc(100svh - 116px); }
+  .marquee { top:77% !important; width:100vw !important; height:210px !important; }
+  .marquee-track { padding:8px 0 !important; }
 }
