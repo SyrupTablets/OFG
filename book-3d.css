@@ -67,3 +67,23 @@
     .book-wrap:has(.book:hover) { --touch-wrap-width:37px; margin-right:6px !important; }
   }
 }
+
+/* Mobile uses an intentional two-step interaction: a short first tap opens a
+   stable, flat cover preview; the following tap visits that book's article.
+   This explicit state replaces unreliable sticky :hover on touch devices. */
+@media (max-width:760px) {
+  .book-wrap:has(.book.is-touch-preview) {
+    width:140px !important;
+    margin-right:8px !important;
+    z-index:20;
+  }
+  .book.is-touch-preview,
+  .book--private.is-touch-preview {
+    transform:rotateY(6deg) translateY(-13px) translateZ(18px) !important;
+    filter:saturate(1.06) contrast(1.02) !important;
+  }
+  .book.is-touch-preview > .book-spine {
+    transform:translateZ(10px) rotateY(-52deg) scaleX(1.22) !important;
+    clip-path:polygon(0 3.5%, 100% 0, 100% 100%, 0 96.5%);
+  }
+}

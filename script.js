@@ -123,6 +123,7 @@ if (window.matchMedia('(pointer: fine)').matches && !window.matchMedia('(prefers
 // The duplicated book shelf can be dragged on any device instead of waiting for the auto-scroll.
 if (window.PointerEvent) {
   let activePointerId = null;
+  let activePointerType = null;
   let dragStartX = 0;
   let dragStartY = 0;
   let dragOffset = 0;
@@ -157,6 +158,7 @@ if (window.PointerEvent) {
     // movement occurred; this makes the narrow shelf much easier to swipe.
     if (event.target.closest('.book') && event.pointerType !== 'touch') return;
     activePointerId = event.pointerId;
+    activePointerType = event.pointerType;
     dragStartX = event.clientX;
     dragStartY = event.clientY;
     dragOffset = getTranslateX();
@@ -169,7 +171,10 @@ if (window.PointerEvent) {
     if (event.pointerId !== activePointerId) return;
     const distanceX = event.clientX - dragStartX;
     const distanceY = event.clientY - dragStartY;
-    if (Math.abs(distanceX) > 6) hasDragged = true;
+    if (Math.abs(distanceX) > 6 && !hasDragged) {
+      hasDragged = true;
+      if (activePointerType === 'touch') document.querySelectorAll('.book.is-touch-preview').forEach((book) => book.classList.remove('is-touch-preview'));
+    }
     if (hasDragged && Math.abs(distanceX) > Math.abs(distanceY)) event.preventDefault();
     dragOffset = normaliseOffset(getTranslateX() + distanceX);
     dragStartX = event.clientX;
@@ -186,6 +191,7 @@ if (window.PointerEvent) {
     }
     resumeAutoScroll();
     activePointerId = null;
+    activePointerType = null;
   };
   marquee.addEventListener('pointerup', finishDrag);
   marquee.addEventListener('pointercancel', finishDrag);
@@ -350,7 +356,18 @@ fetch('projects.json').then((response) => response.json()).then((projects) => {
     button.addEventListener('click', () => {
       if (suppressProjectClick) { suppressProjectClick = false; return; }
       const project = projects.find((item) => item.id === button.dataset.project);
-      if (!project || project.private) return;
+      if (!project) return;
+      const isTouchShelf = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+      if (isTouchShelf) {
+        if (button.classList.contains('is-touch-preview')) {
+          if (!project.private) openProject(project);
+          return;
+        }
+        bookButtons.forEach((book) => book.classList.remove('is-touch-preview'));
+        button.classList.add('is-touch-preview');
+        return;
+      }
+      if (project.private) return;
       openProject(project);
     });
   });
