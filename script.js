@@ -1,10 +1,64 @@
-for (const href of ['geometry.css', 'layout-refine.css', 'layout-refine-v2.css', 'project-articles.css', 'homepage-v3.css', 'project-scroll.css', 'homepage-v4.css', 'about-mondrian.css', 'project-mondrian.css', 'project-title-layer.css', 'legal.css', 'mobile-refine.css', 'contract-form.css']) { const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = href; document.head.append(link); }
+for (const href of ['geometry.css', 'layout-refine.css', 'layout-refine-v2.css', 'project-articles.css', 'homepage-v3.css', 'project-scroll.css', 'homepage-v4.css', 'about-mondrian.css', 'project-mondrian.css', 'project-title-layer.css', 'legal.css', 'mobile-refine.css', 'contract-form.css', 'book-3d.css', 'hero-image-blocks.css']) { const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = href; document.head.append(link); }
 const heroLogo = document.createElement('img'); heroLogo.className = 'hero-logo'; heroLogo.src = 'assets/ofg-home-logo.png'; heroLogo.alt = 'Our Friday Goldfish Studio'; document.querySelector('#home').append(heroLogo);
 const home = document.querySelector('#home');
+const heroArt = document.createElement('div');
+heroArt.className = 'hero-art-blocks';
+heroArt.setAttribute('aria-hidden', 'true');
+heroArt.innerHTML = '<i class="hero-art-block hero-art-block--blue-top" data-art-block></i><i class="hero-art-block hero-art-block--red" data-art-block></i><i class="hero-art-block hero-art-block--paper hero-art-block--logo-well"></i><i class="hero-art-block hero-art-block--yellow" data-art-block></i><i class="hero-art-block hero-art-block--black" data-art-block></i><i class="hero-art-block hero-art-block--red-stripe" data-art-block></i><i class="hero-art-block hero-art-block--blue" data-art-block></i><i class="hero-art-block hero-art-block--yellow-lower" data-art-block></i>';
+home.prepend(heroArt);
+
+// These source fragments come from the complete OFG project archive: cover artwork,
+// spreads and supplied visual references. Every one is pre-cropped to avoid titles,
+// captions and other readable copy. A new fragment is selected on each hover.
+const heroArtSources = [
+  ['assets/background-art/ref01.jpg', '50% 54%', '145%'],
+  ['assets/background-art/ref05.jpg', '52% 56%', '155%'],
+  ['assets/background-art/ref08-safe.jpg', '45% 58%', '155%'],
+  ['assets/background-art/ref13.jpg', '50% 62%', '155%'],
+  ['assets/background-art/projects/safe-p02-1.jpg', '50% 54%', '150%'],
+  ['assets/background-art/projects/safe-p04-1.jpg', '52% 46%', '160%'],
+  ['assets/background-art/projects/safe-p05-1.jpg', '48% 54%', '155%'],
+  ['assets/background-art/projects/safe-p06-1.jpg', '46% 54%', '150%'],
+  ['assets/background-art/projects/safe-p07-1.jpg', '52% 50%', '150%'],
+  ['assets/background-art/projects/safe-p08-1.jpg', '48% 54%', '155%'],
+  ['assets/background-art/projects/safe-p11-1.jpg', '50% 52%', '155%'],
+  ['assets/background-art/projects/safe-p12-1.jpg', '52% 50%', '150%'],
+  ['assets/background-art/projects/safe-p14-1.jpg', '50% 52%', '160%'],
+  ['assets/background-art/projects/safe-p16-1.jpg', '48% 56%', '150%'],
+  ['assets/background-art/projects/safe-p17-1.jpg', '50% 50%', '155%'],
+  ['assets/background-art/projects/safe-p19-1.jpg', '50% 52%', '155%'],
+  ['assets/background-art/projects/safe-p20-1.jpg', '52% 52%', '155%'],
+  ['assets/background-art/projects/safe-p21-1.jpg', '50% 50%', '150%'],
+  ['assets/background-art/projects/safe-p23-1.jpg', '50% 50%', '155%'],
+  ['assets/background-art/projects/safe-p25-1.jpg', '50% 52%', '150%'],
+  ['assets/background-art/projects/safe-p26-1.jpg', '50% 52%', '155%'],
+  ['assets/background-art/projects/safe-p27-2.jpg', '50% 50%', '160%'],
+  ['assets/background-art/projects/safe-p29-1.jpg', '50% 52%', '155%'],
+  ['assets/background-art/projects/safe-p30-1.jpg', '50% 50%', '155%']
+];
+document.querySelectorAll('[data-art-block]').forEach((block, blockIndex) => {
+  let previous = -1;
+  const revealArtwork = () => {
+    let next = Math.floor(Math.random() * heroArtSources.length);
+    if (heroArtSources.length > 1) while (next === previous) next = Math.floor(Math.random() * heroArtSources.length);
+    previous = next;
+    const [source, position, size] = heroArtSources[next];
+    block.style.setProperty('--block-art', `url("${source}")`);
+    block.style.setProperty('--block-art-position', position);
+    block.style.setProperty('--block-art-size', size);
+    block.style.setProperty('--block-delay', `${blockIndex * 22}ms`);
+    block.classList.remove('is-art-visible');
+    requestAnimationFrame(() => block.classList.add('is-art-visible'));
+  };
+  block.addEventListener('pointerenter', revealArtwork);
+  block.addEventListener('pointerleave', () => block.classList.remove('is-art-visible'));
+  block.addEventListener('touchstart', revealArtwork, { passive: true });
+});
 const panel = document.querySelector('#panel');
 const closePanel = document.querySelector('#close-panel');
 const track = document.querySelector('#track');
 const marquee = document.querySelector('#marquee');
+const shelfCopies = 3;
 const navigation = document.querySelector('.nav');
 const brand = document.querySelector('.brand');
 const mobileMenuButton = document.createElement('button');
@@ -33,6 +87,7 @@ brand.addEventListener('click', (event) => {
   closePage();
   if (openProjectModal) openProjectModal.hidden = true;
   activeProject = null;
+  window.resetBookStage?.();
   document.body.classList.remove('project-open');
   document.body.style.overflow = '';
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -65,15 +120,15 @@ if (window.matchMedia('(pointer: fine)').matches && !window.matchMedia('(prefers
   window.addEventListener('blur', () => setMarqueeSpeed(1));
 }
 
-// On phones, the duplicated work shelf can be swiped directly instead of waiting for the auto-scroll.
-if (window.matchMedia('(max-width: 760px)').matches && window.PointerEvent) {
+// The duplicated book shelf can be dragged on any device instead of waiting for the auto-scroll.
+if (window.PointerEvent) {
   let activePointerId = null;
   let dragStartX = 0;
   let dragStartY = 0;
   let dragOffset = 0;
   let hasDragged = false;
   const normaliseOffset = (offset) => {
-    const loopWidth = track.scrollWidth / 2;
+    const loopWidth = track.scrollWidth / shelfCopies;
     if (!loopWidth) return offset;
     while (offset > 0) offset -= loopWidth;
     while (offset <= -loopWidth) offset += loopWidth;
@@ -85,7 +140,7 @@ if (window.matchMedia('(max-width: 760px)').matches && window.PointerEvent) {
     return new DOMMatrixReadOnly(transform).m41;
   };
   const resumeAutoScroll = () => {
-    const loopWidth = track.scrollWidth / 2;
+    const loopWidth = track.scrollWidth / shelfCopies;
     const duration = parseFloat(getComputedStyle(track).animationDuration) || 115;
     const progress = loopWidth ? ((-dragOffset % loopWidth) + loopWidth) % loopWidth / loopWidth : 0;
     track.style.animationDelay = `${-progress * duration}s`;
@@ -116,7 +171,12 @@ if (window.matchMedia('(max-width: 760px)').matches && window.PointerEvent) {
   }, { passive: false });
   const finishDrag = (event) => {
     if (event.pointerId !== activePointerId) return;
-    if (hasDragged) suppressProjectClick = true;
+    if (hasDragged) {
+      // Ignore only the click generated by this drag. Leaving the flag set would
+      // accidentally swallow the visitor's next genuine project click.
+      suppressProjectClick = true;
+      window.setTimeout(() => { suppressProjectClick = false; }, 0);
+    }
     resumeAutoScroll();
     activePointerId = null;
   };
@@ -128,7 +188,7 @@ function openPage(name) { panel.hidden = false; document.querySelectorAll('.page
 function closePage() { panel.hidden = true; document.body.style.overflow = ''; }
 document.querySelectorAll('[data-page]').forEach((button) => button.addEventListener('click', () => openPage(button.dataset.page)));
 closePanel.addEventListener('click', closePage);
-document.addEventListener('keydown', (event) => { if (event.key === 'Escape') { closePage(); document.querySelector('#project-modal')?.setAttribute('hidden', ''); activeProject = null; document.body.classList.remove('project-open'); } });
+document.addEventListener('keydown', (event) => { if (event.key === 'Escape') { closePage(); document.querySelector('#project-modal')?.setAttribute('hidden', ''); activeProject = null; window.resetBookStage?.(); document.body.classList.remove('project-open'); } });
 
 const articleModal = document.createElement('section'); articleModal.id = 'project-modal'; articleModal.className = 'project-modal'; articleModal.hidden = true; document.body.append(articleModal);
 let activeProject = null;
@@ -201,12 +261,17 @@ function openProject(project) {
     articleModal.style.setProperty('--project-title-size', `${titleSize}px`);
   });
   extractProjectPalette(project.images[0], project.color);
-  articleModal.hidden = false; document.body.classList.add('project-open'); document.body.style.overflow = 'hidden'; articleModal.querySelector('.project-close').addEventListener('click', () => { articleModal.hidden = true; activeProject = null; document.body.classList.remove('project-open'); document.body.style.overflow = ''; });
+  articleModal.hidden = false; document.body.classList.add('project-open'); document.body.style.overflow = 'hidden'; articleModal.querySelector('.project-close').addEventListener('click', () => { articleModal.hidden = true; activeProject = null; window.resetBookStage?.(); document.body.classList.remove('project-open'); document.body.style.overflow = ''; });
   articleModal.onscroll = () => articleModal.style.setProperty('--project-scroll', `${Math.min(articleModal.scrollTop, 520)}px`);
 }
 window.refreshOpenProjectLanguage = () => { if (activeProject && !articleModal.hidden) openProject(activeProject); };
 
 fetch('projects.json').then((response) => response.json()).then((projects) => {
+  // Two client-private commissions join the shelf only. They intentionally have no detail page.
+  projects.push(
+    { id: 'p31', title: 'PRIVATE COMMISSION · 31', body: '', images: [], color: '#b8d7d2', private: true },
+    { id: 'p32', title: 'PRIVATE COMMISSION · 32', body: '', images: [], color: '#f18b20', private: true }
+  );
   const getHueOrder = (hex) => {
     const rgb = hex.match(/[a-f\d]{2}/gi).map((part) => parseInt(part, 16) / 255);
     const max = Math.max(...rgb); const min = Math.min(...rgb); const chroma = max - min;
@@ -232,9 +297,32 @@ fetch('projects.json').then((response) => response.json()).then((projects) => {
     return palette.reduce((nearest, item) => distance(hue, item.hue) < distance(hue, nearest.hue) ? item : nearest).colour;
   };
   projects.sort((a, b) => getHueOrder(a.color) - getHueOrder(b.color));
-  const cards = [...projects, ...projects].map((project, index) => `<article class="book-wrap"><button class="book" type="button" data-project="${project.id}" style="background:${project.color};--frame-colour:${getFrameColour(project.color)}" aria-label="查看项目"><img src="${project.images[0]}" alt="${escapeHtml(project.title)}" loading="${index < 8 ? 'eager' : 'lazy'}" decoding="async" /><span>${String((index % projects.length) + 1).padStart(2, '0')} / OFG</span></button></article>`).join('');
+  const splitBookAsset = (id, face) => {
+    if (id === 'p31' || id === 'p32') {
+      const fileId = id === 'p31' ? 'P31' : 'P32';
+      return `assets/books/${encodeURIComponent('拆分封面封底')}/${fileId}%20${face}.jpg`;
+    }
+    const fileFace = id === 'p21' && face === 'spine' ? 'spin' : face;
+    return `assets/books/${encodeURIComponent('拆分封面封底')}/${id}-${fileFace}.jpg`;
+  };
+  const bookMarkup = (project, index, className = '') => {
+    // Keep every cover facing the reader with its spine subtly exposed.
+    const turns = [-27, -24, -21, -18, -15, -12, -9, -6];
+    const turn = turns[index % turns.length];
+    const isPrivate = Boolean(project.private);
+    const state = isPrivate ? ' book--private' : '';
+    return `<button class="book ${className}${state}" type="button" data-project="${project.id}" style="--book-turn:${turn}deg;--front-image:url('${splitBookAsset(project.id, 'front')}');--back-image:url('${splitBookAsset(project.id, 'back')}');--spine-image:url('${splitBookAsset(project.id, 'spine')}');--book-colour:${project.color};--frame-colour:${getFrameColour(project.color)}" aria-label="${isPrivate ? 'Private commission, preview only' : `查看项目 ${escapeHtml(project.title)}`}"${isPrivate ? ' aria-disabled="true"' : ''}><span class="book-back" aria-hidden="true"></span><span class="book-spine" aria-hidden="true"></span><span class="book-front" aria-hidden="true"></span><span class="book-pages" aria-hidden="true"></span><span class="book-label">${project.id.slice(1).padStart(2, '0')} / OFG</span></button>`;
+  };
+  // Three identical sequences make the physical shelf continuously draggable in either direction.
+  const cards = Array.from({ length: shelfCopies }, () => projects).flat().map((project, index) => `<article class="book-wrap">${bookMarkup(project, index)}</article>`).join('');
   track.innerHTML = cards;
-  track.addEventListener('click', (event) => { if (suppressProjectClick) { suppressProjectClick = false; return; } const button = event.target.closest('[data-project]'); if (button) openProject(projects.find((project) => project.id === button.dataset.project)); });
+  track.addEventListener('click', (event) => {
+    if (suppressProjectClick) { suppressProjectClick = false; return; }
+    const button = event.target.closest('[data-project]'); if (!button) return;
+    const project = projects.find((item) => item.id === button.dataset.project);
+    if (project.private) return;
+    openProject(project);
+  });
 });
 
 const about = document.querySelector('#about');

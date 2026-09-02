@@ -1,0 +1,34 @@
+/* Interactive Mondrian field: artwork is revealed only inside a coloured block. */
+/* The supplied composition is the master artwork; it is scaled as one canvas. */
+.hero { isolation: isolate; overflow: hidden; }
+.site { background:var(--paper) !important; background-image:none !important; }
+.hero::before, .hero::after { display: none !important; }
+/* Keep the replacement master artwork's 9192:4062 ratio. On a wide screen its white margins
+   simply show through; on a narrow screen the side margins crop, never the logo's shape. */
+.hero-art-blocks { position:absolute; z-index:0; display:block; overflow:hidden; top:0; bottom:0; left:50%; width:auto; height:100%; aspect-ratio:9192 / 4062; transform:translateX(-50%); background:var(--paper) url('assets/background-01.jpg') center / 100% 100% no-repeat; pointer-events:none; }
+.hero-art-block { position:absolute; z-index:1; display:block; overflow:hidden; box-sizing:border-box; background:transparent; pointer-events:auto; }
+.hero-art-block::before, .hero-art-block::after { content:""; position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .58s cubic-bezier(.2,.72,.18,1), transform .8s cubic-bezier(.2,.72,.18,1); }
+/* Never letterbox an artwork fragment: crop/zoom it until every colour block is full. */
+.hero-art-block::before { background-image:var(--block-art); background-position:var(--block-art-position,50% 50%); background-size:cover !important; background-repeat:no-repeat; filter:grayscale(.1) contrast(1.12) saturate(1.16); transform:scale(1.12); }
+.hero-art-block::after { background:var(--block-colour); mix-blend-mode:color; }
+.hero-art-block.is-art-visible::before { opacity:.94; transform:scale(1); transition-delay:var(--block-delay,0ms); }
+.hero-art-block.is-art-visible::after { opacity:.68; transition-delay:var(--block-delay,0ms); }
+.hero-art-block--black.is-art-visible::after { opacity:.64; mix-blend-mode:multiply; }
+/* Coordinates below map to the coloured rectangles in the 9192 × 4062 artwork. */
+.hero-art-block--blue-top { --block-colour:var(--blue); left:25.5%; top:8.7%; width:17.7%; height:20.3%; }
+.hero-art-block--red { --block-colour:var(--red); left:51.6%; top:0; width:17.4%; height:29%; }
+.hero-art-block--logo-well { left:39.5%; top:29%; width:22%; height:15.6%; pointer-events:none; }
+.hero-art-block--yellow { --block-colour:var(--yellow); left:46.5%; top:13%; width:4.9%; height:16%; }
+.hero-art-block--black { --block-colour:var(--ink); left:33.2%; top:44.6%; width:14.3%; height:14.1%; }
+.hero-art-block--red-stripe { --block-colour:var(--red); left:47.5%; top:44.6%; width:1%; height:35.4%; }
+.hero-art-block--blue { --block-colour:var(--blue); left:48.5%; top:44.6%; width:6.4%; height:30.3%; }
+.hero-art-block--yellow-lower { --block-colour:var(--yellow); left:58.3%; top:44.6%; width:14.9%; height:21.4%; }
+/* background-01 already contains the canonical OFG mark. */
+.hero-logo { display:none !important; }
+.hero > :not(.hero-art-blocks):not(.hero-logo) { position:relative; z-index:4; }
+.marquee { top:78% !important; height:36% !important; transform:translate(-50%,-50%) !important; }
+.marquee, .book-stage { z-index:8 !important; }
+
+@media (max-width:760px) {
+  .hero-art-blocks { background-size:100% 100%; }
+}

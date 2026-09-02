@@ -1,0 +1,56 @@
+/* Local-only 3D thesis shelf. At rest the real spines form a book row;
+   hovering one lets its cover turn out from the shelf. */
+.marquee { perspective: 1600px; perspective-origin: 50% 42%; overflow: visible !important; cursor: grab; mask-image:none !important; -webkit-mask-image:none !important; }
+.marquee:active { cursor: grabbing; }
+.marquee-track { transform-style: preserve-3d; animation-name: book-shelf-roll !important; }
+@keyframes book-shelf-roll { to { transform: translate(-33.333333%, -50%); } }
+.marquee .book-wrap { --shelf-book-height:230px; --shelf-spine-width:20px; width: 50px !important; height: calc(var(--shelf-book-height) + 6px) !important; margin-right: 8px !important; perspective: 900px; perspective-origin: 50% 48%; isolation: isolate; transition: width .68s cubic-bezier(.2,.78,.18,1), margin .68s cubic-bezier(.2,.78,.18,1); }
+.book { width: 176px !important; height: var(--shelf-book-height) !important; position: relative; overflow: visible !important; box-sizing:border-box !important; padding:0 !important; border: 0 !important; background: transparent !important; box-shadow: none !important; transform-style: preserve-3d !important; transform-origin: left center !important; transform: rotateY(76deg) translateZ(0) !important; transition: transform .72s cubic-bezier(.16,.86,.18,1), filter .45s ease !important; cursor: pointer; }
+.book-back, .book-front, .book-spine, .book-pages, .book-label { position: absolute !important; display: block !important; padding: 0 !important; pointer-events: none; }
+.book > .book-front, .book > .book-spine, .book > .book-back, .book > .book-pages { bottom:auto !important; }
+.book::after { content:""; position:absolute; z-index:0; pointer-events:none; inset:0; background:transparent; box-shadow:5px 5px 12px 3px rgba(17,17,18,.20); transform:translateZ(-1px); }
+.book > .book-front { z-index: 3; top:0; left:var(--shelf-spine-width) !important; width:calc(100% - var(--shelf-spine-width)); height:var(--shelf-book-height); border: 0 !important; background: var(--front-image) center / 100% 100% no-repeat var(--book-colour) !important; transform: translateZ(10px); box-shadow:none !important; }
+.book > .book-spine { z-index: 4; top:0; left:0 !important; width:var(--shelf-spine-width); height:var(--shelf-book-height); border:0 !important; background:var(--spine-image) center / 100% 100% no-repeat var(--book-colour) !important; transform-origin:right center; transform:translateZ(10px) rotateY(-76deg); transition:transform .72s cubic-bezier(.16,.86,.18,1); box-shadow:none !important; }
+.book-pages { display:none !important; }
+.book-back { display: none !important; }
+.book-label { display:none !important; }
+.book-wrap:has(.book:hover) { width: 188px !important; margin-right: 12px !important; z-index: 20; }
+.book:hover { transform: rotateY(6deg) translateY(-19px) translateZ(35px) !important; filter:saturate(1.06) contrast(1.02); }
+.book:hover > .book-spine { transform:translateZ(10px) rotateY(-52deg) scaleX(1.22); clip-path:polygon(0 3.5%, 100% 0, 100% 100%, 0 96.5%); }
+.book > .book-spine::after { content:none; }
+/* Private commissions keep the same book-shelf motion; only their click-through is disabled. */
+.book--private { --shelf-spine-width:26px; cursor:pointer; }
+.book--private:hover { transform: rotateY(6deg) translateY(-19px) translateZ(35px) !important; filter:saturate(1.06) contrast(1.02); }
+/* The two privacy-only commissions have very pale spines. Keep their supplied spine art
+   physically visible in the shelf rather than letting it disappear into the paper field. */
+.book--private .book-spine { display:block !important; width:var(--shelf-spine-width) !important; filter:contrast(1.16) saturate(.94); box-shadow:none !important; }
+
+.hero.is-book-staged .marquee-track { animation-play-state: paused !important; opacity: .18; transition: opacity .45s ease; }
+.book-stage { position: absolute; z-index: 12; inset: 4% 0 0; display: grid; place-items: center; opacity: 0; pointer-events: none; transition: opacity .38s ease; perspective: 1900px; }
+.book-stage.is-visible { opacity: 1; pointer-events: auto; }
+.book-stage .book { width: min(62vw, 650px) !important; height: min(65vh, 600px) !important; transform: translateY(12vh) scale(.28) rotateZ(7deg) rotateX(8deg) rotateY(var(--book-turn)) !important; transform-origin: center center; transition: transform 1.08s cubic-bezier(.16,.9,.2,1) !important; }
+.book-stage.is-visible .book { transform: translateY(-2vh) scale(1) rotateZ(0deg) rotateX(3deg) rotateY(0deg) !important; }
+.book-stage .book-back, .book-stage .book-front { display:block !important; top:0; width:calc(46% - 12px); height:100%; border:0 !important; background-size:100% 100% !important; }
+.book-stage .book-back { left:4%; background:var(--back-image) center / 100% 100% no-repeat var(--book-colour) !important; transform-origin:right center; transform:rotateY(0deg) translateZ(-4px); box-shadow:none !important; transition:transform 1.18s cubic-bezier(.2,.82,.18,1) .14s; }
+.book-stage .book-front { inset:auto !important; left:calc(50% + 12px) !important; top:0; background:var(--front-image) center / 100% 100% no-repeat var(--book-colour) !important; transform-origin:left center; transform:rotateY(0deg) translateZ(10px); transition:transform 1.18s cubic-bezier(.2,.82,.18,1) .14s; }
+.book-stage .book-spine { left:calc(50% - 12px) !important; width:24px; height:100%; background:var(--spine-image) center / 100% 100% no-repeat var(--book-colour) !important; transform:translateZ(12px); transition:transform .6s ease .4s; }
+.book-stage .book-pages { top: 6px; right: 0; width: 47%; height: calc(100% - 12px); transform: translateZ(-10px); }
+.book-stage .book-label { left: 55%; bottom: 14px; font-size: 10px !important; }
+.book-stage .book.is-unfolded .book-back { transform: rotateY(34deg) translateZ(-4px); }
+.book-stage .book.is-unfolded .book-front { left:calc(50% + 12px) !important; transform:rotateY(-34deg) translateZ(10px); }
+.book-stage .book.is-unfolded .book-spine { transform: translateZ(16px); }
+.book-stage .book--opened:hover { transform: translateY(-3vh) scale(1.025) rotateX(1deg) rotateY(0deg) !important; }
+
+@media (max-width: 760px) {
+  .marquee { perspective: 950px; }
+  .marquee .book-wrap { --shelf-book-height:168px; --shelf-spine-width:14px; width: 37px !important; height: 178px !important; margin-right: 6px !important; }
+  .book { width:130px !important; height:var(--shelf-book-height) !important; transform:rotateY(76deg) !important; }
+  .book-front { height:var(--shelf-book-height); }
+  .book-spine { left:0; width:var(--shelf-spine-width); height:var(--shelf-book-height); }
+  .book-wrap:has(.book:hover) { width:140px !important; margin-right:8px !important; }
+  .book:hover { transform: rotateY(6deg) translateY(-13px) translateZ(18px) !important; }
+  .book-stage { inset: 10% 0 0; }
+  .book-stage .book { width: min(89vw, 430px) !important; height: min(54vh, 470px) !important; }
+  .book-stage .book-spine { left: calc(50% - 7px) !important; width: 14px; }
+  .book-stage .book-label { left: 55%; bottom: 8px; font-size: 8px !important; }
+}
