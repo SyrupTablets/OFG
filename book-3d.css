@@ -55,3 +55,15 @@
   .book-stage .book-spine { left: calc(50% - 7px) !important; width: 14px; }
   .book-stage .book-label { left: 55%; bottom: 8px; font-size: 8px !important; }
 }
+
+/* Touch browsers can leave :hover "stuck" after a swipe. Keep the shelf stable
+   while swiping; a short tap still opens the article through the click handler. */
+@media (hover: none), (pointer: coarse) {
+  .marquee { touch-action:pan-y !important; }
+  .book-wrap:has(.book:hover) { width:var(--touch-wrap-width, 50px) !important; margin-right:8px !important; }
+  .book:hover, .book--private:hover { transform:rotateY(76deg) translateZ(0) !important; filter:none !important; }
+  .book:hover > .book-spine { transform:translateZ(10px) rotateY(-76deg) !important; clip-path:none; }
+  @media (max-width:760px) {
+    .book-wrap:has(.book:hover) { --touch-wrap-width:37px; margin-right:6px !important; }
+  }
+}

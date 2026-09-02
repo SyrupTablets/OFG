@@ -152,7 +152,10 @@ if (window.PointerEvent) {
     // A book is a link-like control: let its own click open the article. Dragging
     // starts only from the space between books, so an enlarged hover-book remains
     // reliably clickable with one press.
-    if (event.target.closest('.book')) return;
+    // Mouse clicks on a book open its article immediately. On touch screens we
+    // deliberately begin a drag even from a book, then open only if no horizontal
+    // movement occurred; this makes the narrow shelf much easier to swipe.
+    if (event.target.closest('.book') && event.pointerType !== 'touch') return;
     activePointerId = event.pointerId;
     dragStartX = event.clientX;
     dragStartY = event.clientY;
