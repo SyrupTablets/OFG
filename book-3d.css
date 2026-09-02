@@ -44,7 +44,10 @@
 
 @media (max-width: 760px) {
   .marquee { perspective: 950px; }
-  .marquee .book-wrap { --shelf-book-height:168px; --shelf-spine-width:14px; width: 37px !important; height: 178px !important; margin-right: 6px !important; }
+  /* Reserve a little more real shelf space than the projected book width.
+     This prevents neighbouring books from ever crossing after a touch drag
+     hands control back to the rolling animation. */
+  .marquee .book-wrap { --shelf-book-height:168px; --shelf-spine-width:14px; width: 42px !important; height: 178px !important; margin-right: 7px !important; }
   .book { width:130px !important; height:var(--shelf-book-height) !important; transform:rotateY(76deg) !important; }
   .book-front { height:var(--shelf-book-height); }
   .book-spine { left:0; width:var(--shelf-spine-width); height:var(--shelf-book-height); }
@@ -64,7 +67,7 @@
   .book:hover, .book--private:hover { transform:rotateY(76deg) translateZ(0) !important; filter:none !important; }
   .book:hover > .book-spine { transform:translateZ(10px) rotateY(-76deg) !important; clip-path:none; }
   @media (max-width:760px) {
-    .book-wrap:has(.book:hover) { --touch-wrap-width:37px; margin-right:6px !important; }
+    .book-wrap:has(.book:hover) { --touch-wrap-width:42px; margin-right:7px !important; }
   }
 }
 
@@ -85,5 +88,11 @@
   .book.is-touch-preview > .book-spine {
     transform:translateZ(10px) rotateY(-52deg) scaleX(1.22) !important;
     clip-path:polygon(0 3.5%, 100% 0, 100% 100%, 0 96.5%);
+  }
+  /* The cover sits one physical pixel beneath the spine edge. This tiny
+     overlap removes anti-aliased hairlines without changing the book width. */
+  .book.is-touch-preview > .book-front {
+    left:calc(var(--shelf-spine-width) - 1px) !important;
+    width:calc(100% - var(--shelf-spine-width) + 1px) !important;
   }
 }
