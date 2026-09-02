@@ -219,6 +219,10 @@ const splitProjectTitle = (title) => {
   const position = divider.index;
   return [title.slice(0, position).trim(), title.slice(position + 1).trim()];
 };
+const splitLeadingFlag = (prefix) => {
+  const match = prefix.match(/^(\p{Regional_Indicator}{2})(.*)$/u);
+  return match ? [match[1], match[2].trimStart()] : ['', prefix];
+};
 const titleColourFor = (colour) => {
   const parts = colour.replace('#', '').match(/[a-f\d]{2}/gi);
   if (!parts || parts.length !== 3) return '#111112';
@@ -251,6 +255,7 @@ const extractProjectPalette = (src, fallback) => {
     articleModal.style.setProperty('--project-colour-one', colours[0]);
     articleModal.style.setProperty('--project-colour-two', colours[1]);
     articleModal.style.setProperty('--project-colour-three', colours[2]);
+    articleModal.style.setProperty('--project-title-colour', titleColourFor(colours[0]));
   };
   image.src = src;
 };
@@ -261,13 +266,16 @@ function openProject(project) {
   const displayPrefix = translatedProject?.prefix || projectPrefix;
   const displayName = translatedProject?.title || projectName;
   const displayBody = translatedProject?.body || project.body;
+  const [flag, prefixText] = splitLeadingFlag(displayPrefix);
+  const hasTitle = Boolean(project.title.trim());
   articleModal.style.setProperty('--project-colour', project.color);
   articleModal.style.setProperty('--project-title-colour', titleColourFor(project.color));
   articleModal.style.setProperty('--project-colour-one', project.color);
   articleModal.style.setProperty('--project-colour-two', '#ffffff');
   articleModal.style.setProperty('--project-colour-three', '#111112');
-  const publishedDate = project.published ? escapeHtml(project.published) : publicationDates[project.id];
-  articleModal.innerHTML = `<button class="project-close" aria-label="Close project">×</button><article class="project-article"><section class="project-hero"><div class="project-mondrian" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="project-hero-copy"><p class="project-meta">OFG STUDIO / PROJECT</p><h2><span class="project-title-prefix">${escapeHtml(displayPrefix)}</span><span class="project-title-name">${escapeHtml(displayName)}</span></h2><p class="project-scroll-cue">SCROLL TO EXPLORE ↓</p></div></section><div class="project-transition" aria-hidden="true"><span></span><span></span><span></span></div><section class="project-detail"><div class="project-detail-head"><time class="project-published">${publishedDate}</time></div>${displayBody ? `<div class="project-copy">${escapeHtml(displayBody)}</div>` : ''}<div class="project-gallery">${project.images.map((src, index) => `<figure class="gallery-item gallery-item-${index + 1}"><img src="${src}" alt="${escapeHtml(displayName)} — ${index + 1}" loading="${index < 3 ? 'eager' : 'lazy'}" /></figure>`).join('')}</div></section></article>`;
+  const publishedDate = project.published || publicationDates[project.id];
+  const titleMarkup = hasTitle ? `<h2><span class="project-title-prefix">${flag ? `<span class="project-title-flag" aria-hidden="true">${flag}</span>` : ''}<span class="project-title-prefix-copy">${escapeHtml(prefixText)}</span></span><span class="project-title-name">${escapeHtml(displayName)}</span></h2>` : '';
+  articleModal.innerHTML = `<button class="project-close" aria-label="Close project">×</button><article class="project-article"><section class="project-hero"><div class="project-mondrian" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="project-hero-copy"><p class="project-meta">OFG STUDIO / PROJECT</p>${titleMarkup}<p class="project-scroll-cue">SCROLL TO EXPLORE ↓</p></div></section><div class="project-transition" aria-hidden="true"><span></span><span></span><span></span></div><section class="project-detail"><div class="project-detail-head">${publishedDate ? `<time class="project-published">${escapeHtml(publishedDate)}</time>` : ''}</div>${displayBody ? `<div class="project-copy">${escapeHtml(displayBody)}</div>` : ''}<div class="project-gallery">${project.images.map((src, index) => `<figure class="gallery-item gallery-item-${index + 1}"><img src="${src}" alt="${escapeHtml(displayName || 'Private commission')} — ${index + 1}" loading="${index < 3 ? 'eager' : 'lazy'}" /></figure>`).join('')}</div></section></article>`;
   requestAnimationFrame(() => {
     const available = articleModal.clientWidth * .82;
     const titleSize = Math.min(78, Math.max(18, available / (displayName.length * 1.08)));
@@ -280,10 +288,11 @@ function openProject(project) {
 window.refreshOpenProjectLanguage = () => { if (activeProject && !articleModal.hidden) openProject(activeProject); };
 
 fetch('projects.json').then((response) => response.json()).then((projects) => {
-  // Two client-private commissions join the shelf only. They intentionally have no detail page.
+  // Two client-private commissions use the same presentation template, while
+  // keeping the research itself deliberately undisclosed.
   projects.push(
-    { id: 'p31', title: 'PRIVATE COMMISSION · 31', body: '', images: [], color: '#b8d7d2', private: true },
-    { id: 'p32', title: 'PRIVATE COMMISSION · 32', body: '', images: [], color: '#f18b20', private: true }
+    { id: 'p31', title: '', body: 'Some books prefer to stay a little private.\n有些研究选择被阅读，有些选择暂时保留一点神秘。\n\n应作者意愿，研究内容不完全公开，但它的封面很乐意和大家见面。', images: ['assets/books/%E6%8B%86%E5%88%86%E5%B0%81%E9%9D%A2%E5%B0%81%E5%BA%95/P31%20front.jpg', 'assets/books/%E6%8B%86%E5%88%86%E5%B0%81%E9%9D%A2%E5%B0%81%E5%BA%95/P31%20back.jpg'], color: '#b8d7d2', private: true },
+    { id: 'p32', title: '', body: 'Some books prefer to stay a little private.\n有些研究选择被阅读，有些选择暂时保留一点神秘。\n\n应作者意愿，研究内容不完全公开，但它的封面很乐意和大家见面。', images: ['assets/books/%E6%8B%86%E5%88%86%E5%B0%81%E9%9D%A2%E5%B0%81%E5%BA%95/P32%20front.jpg', 'assets/books/%E6%8B%86%E5%88%86%E5%B0%81%E9%9D%A2%E5%B0%81%E5%BA%95/P32%20back.jpg'], color: '#f18b20', private: true }
   );
   const getHueOrder = (hex) => {
     const rgb = hex.match(/[a-f\d]{2}/gi).map((part) => parseInt(part, 16) / 255);
@@ -324,7 +333,7 @@ fetch('projects.json').then((response) => response.json()).then((projects) => {
     const turn = turns[index % turns.length];
     const isPrivate = Boolean(project.private);
     const state = isPrivate ? ' book--private' : '';
-    return `<button class="book ${className}${state}" type="button" data-project="${project.id}" data-front="${splitBookAsset(project.id, 'front')}" data-spine="${splitBookAsset(project.id, 'spine')}" style="--book-turn:${turn}deg;--book-colour:${project.color};--frame-colour:${getFrameColour(project.color)}" aria-label="${isPrivate ? 'Private commission, preview only' : `查看项目 ${escapeHtml(project.title)}`}"${isPrivate ? ' aria-disabled="true"' : ''}><span class="book-back" aria-hidden="true"></span><span class="book-spine" aria-hidden="true"></span><span class="book-front" aria-hidden="true"></span><span class="book-pages" aria-hidden="true"></span><span class="book-label">${project.id.slice(1).padStart(2, '0')} / OFG</span></button>`;
+    return `<button class="book ${className}${state}" type="button" data-project="${project.id}" data-front="${splitBookAsset(project.id, 'front')}" data-spine="${splitBookAsset(project.id, 'spine')}" style="--book-turn:${turn}deg;--book-colour:${project.color};--frame-colour:${getFrameColour(project.color)}" aria-label="${project.private ? '查看私密委托作品' : `查看项目 ${escapeHtml(project.title)}`}"><span class="book-back" aria-hidden="true"></span><span class="book-spine" aria-hidden="true"></span><span class="book-front" aria-hidden="true"></span><span class="book-pages" aria-hidden="true"></span><span class="book-label">${project.id.slice(1).padStart(2, '0')} / OFG</span></button>`;
   };
   // Three identical sequences make the physical shelf continuously draggable in either direction.
   const cards = Array.from({ length: shelfCopies }, () => projects).flat().map((project, index) => `<article class="book-wrap">${bookMarkup(project, index)}</article>`).join('');
@@ -360,14 +369,13 @@ fetch('projects.json').then((response) => response.json()).then((projects) => {
       const isTouchShelf = window.matchMedia('(hover: none), (pointer: coarse)').matches;
       if (isTouchShelf) {
         if (button.classList.contains('is-touch-preview')) {
-          if (!project.private) openProject(project);
+          openProject(project);
           return;
         }
         bookButtons.forEach((book) => book.classList.remove('is-touch-preview'));
         button.classList.add('is-touch-preview');
         return;
       }
-      if (project.private) return;
       openProject(project);
     });
   });
