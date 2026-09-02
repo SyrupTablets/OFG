@@ -224,9 +224,13 @@ const splitLeadingFlag = (prefix) => {
   return match ? [match[1], match[2].trimStart()] : ['', prefix];
 };
 const titleColourFor = (colour) => {
-  const parts = colour.replace('#', '').match(/[a-f\d]{2}/gi);
-  if (!parts || parts.length !== 3) return '#111112';
-  const [red, green, blue] = parts.map((part) => parseInt(part, 16) / 255);
+  const rgbMatch = colour.match(/^rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+  const hexParts = colour.replace('#', '').match(/[a-f\d]{2}/gi);
+  const channels = rgbMatch
+    ? rgbMatch.slice(1).map(Number)
+    : hexParts?.length === 3 ? hexParts.map((part) => parseInt(part, 16)) : null;
+  if (!channels) return '#111112';
+  const [red, green, blue] = channels.map((channel) => channel / 255);
   const luminance = .2126 * red + .7152 * green + .0722 * blue;
   return luminance < .42 ? '#ffffff' : '#111112';
 };

@@ -12,4 +12,4 @@
 
 /* One left-hand datum for title, date, and the article copy. */
 .project-hero-copy{left:8vw!important}.project-detail{padding-left:8vw!important}@media(max-width:760px){.project-hero-copy{left:6vw!important}.project-detail{padding-left:6vw!important}}
-.project-title-flag{color:initial!important;font-family:"Apple Color Emoji","Segoe UI Emoji",sans-serif;font-style:normal}.project-title-prefix-copy,.project-title-name{color:var(--project-title-colour,#111112)!important}
+.project-title-flag{color:initial!important;-webkit-text-fill-color:initial!important;font-family:emoji,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;font-style:normal;font-variant-emoji:emoji;filter:none!important;mix-blend-mode:normal!important}.project-title-prefix-copy,.project-title-name{color:var(--project-title-colour,#111112)!important}
