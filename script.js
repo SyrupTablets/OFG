@@ -7,9 +7,8 @@ heroArt.setAttribute('aria-hidden', 'true');
 heroArt.innerHTML = '<i class="hero-art-block hero-art-block--blue-top" data-art-block></i><i class="hero-art-block hero-art-block--red" data-art-block></i><i class="hero-art-block hero-art-block--paper hero-art-block--logo-well"></i><i class="hero-art-block hero-art-block--yellow" data-art-block></i><i class="hero-art-block hero-art-block--black" data-art-block></i><i class="hero-art-block hero-art-block--red-stripe" data-art-block></i><i class="hero-art-block hero-art-block--blue" data-art-block></i><i class="hero-art-block hero-art-block--yellow-lower" data-art-block></i>';
 home.prepend(heroArt);
 
-// These source fragments come from the complete OFG project archive: cover artwork,
-// spreads and supplied visual references. Every one is pre-cropped to avoid titles,
-// captions and other readable copy. A new fragment is selected on each hover.
+// This is the homepage artwork library. Every newly added project contributes a
+// pre-cropped, text-free fragment here; a new fragment is selected on each hover.
 const heroArtSources = [
   ['assets/background-art/ref01.jpg', '50% 54%', '145%'],
   ['assets/background-art/ref05.jpg', '52% 56%', '155%'],
@@ -34,7 +33,8 @@ const heroArtSources = [
   ['assets/background-art/projects/safe-p26-1.jpg', '50% 52%', '155%'],
   ['assets/background-art/projects/safe-p27-2.jpg', '50% 50%', '160%'],
   ['assets/background-art/projects/safe-p29-1.jpg', '50% 52%', '155%'],
-  ['assets/background-art/projects/safe-p30-1.jpg', '50% 50%', '155%']
+  ['assets/background-art/projects/safe-p30-1.jpg', '50% 50%', '155%'],
+  ['assets/background-art/projects/safe-p33-1.jpg', '50% 54%', '155%']
 ];
 document.querySelectorAll('[data-art-block]').forEach((block, blockIndex) => {
   let previous = -1;
