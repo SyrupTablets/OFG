@@ -285,18 +285,18 @@ function openProject(project) {
     const titleSize = Math.min(78, Math.max(18, available / (displayName.length * 1.08)));
     articleModal.style.setProperty('--project-title-size', `${titleSize}px`);
   });
-  extractProjectPalette(project.images[0], project.color);
+  if (project.images[0]) extractProjectPalette(project.images[0], project.color);
   articleModal.hidden = false; document.body.classList.add('project-open'); document.body.style.overflow = 'hidden'; articleModal.querySelector('.project-close').addEventListener('click', () => { articleModal.hidden = true; activeProject = null; window.resetBookStage?.(); document.body.classList.remove('project-open'); document.body.style.overflow = ''; });
   articleModal.onscroll = () => articleModal.style.setProperty('--project-scroll', `${Math.min(articleModal.scrollTop, 520)}px`);
 }
 window.refreshOpenProjectLanguage = () => { if (activeProject && !articleModal.hidden) openProject(activeProject); };
 
-fetch('projects.json').then((response) => response.json()).then((projects) => {
+fetch('projects.json?v=20260904-p33').then((response) => response.json()).then((projects) => {
   // Two client-private commissions use the same presentation template, while
   // keeping the research itself deliberately undisclosed.
   projects.push(
-    { id: 'p31', title: '', body: 'Some books prefer to stay a little private.\n有些研究选择被阅读，有些选择暂时保留一点神秘。\n\n应作者意愿，研究内容不完全公开，但它的封面很乐意和大家见面。', images: ['assets/books/%E6%8B%86%E5%88%86%E5%B0%81%E9%9D%A2%E5%B0%81%E5%BA%95/P31%20front.jpg', 'assets/books/%E6%8B%86%E5%88%86%E5%B0%81%E9%9D%A2%E5%B0%81%E5%BA%95/P31%20back.jpg'], color: '#b8d7d2', private: true },
-    { id: 'p32', title: '', body: 'Some books prefer to stay a little private.\n有些研究选择被阅读，有些选择暂时保留一点神秘。\n\n应作者意愿，研究内容不完全公开，但它的封面很乐意和大家见面。', images: ['assets/books/%E6%8B%86%E5%88%86%E5%B0%81%E9%9D%A2%E5%B0%81%E5%BA%95/P32%20front.jpg', 'assets/books/%E6%8B%86%E5%88%86%E5%B0%81%E9%9D%A2%E5%B0%81%E5%BA%95/P32%20back.jpg'], color: '#f18b20', private: true }
+    { id: 'p31', title: '', body: 'Some books prefer to stay a little private.\n有些研究选择被阅读，有些选择暂时保留一点神秘。\n\n应作者意愿，研究内容不完全公开，但它的封面很乐意和大家见面。', images: [], color: '#b8d7d2', private: true },
+    { id: 'p32', title: '', body: 'Some books prefer to stay a little private.\n有些研究选择被阅读，有些选择暂时保留一点神秘。\n\n应作者意愿，研究内容不完全公开，但它的封面很乐意和大家见面。', images: [], color: '#f18b20', private: true }
   );
   const getHueOrder = (hex) => {
     const rgb = hex.match(/[a-f\d]{2}/gi).map((part) => parseInt(part, 16) / 255);
