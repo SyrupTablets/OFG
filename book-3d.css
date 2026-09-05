@@ -75,7 +75,20 @@
    stable, flat cover preview; the following tap visits that book's article.
    This explicit state replaces unreliable sticky :hover on touch devices. */
 @media (max-width:760px) {
-  .book-wrap:has(.book.is-touch-preview) {
+  /* Override legacy hover rules, including the predecessor's -56px margin.
+     Touch hover must never pull a neighbour into the selected book. */
+  .marquee .book-wrap,
+  .marquee .book-wrap:has(.book:hover),
+  .marquee .book-wrap:has(+ .book-wrap .book:hover) {
+    margin-left:0 !important;
+    margin-right:7px !important;
+  }
+  /* Focus/active previously restored the desktop 176px width on tap. */
+  .marquee .book,
+  .marquee .book:focus,
+  .marquee .book:focus-visible,
+  .marquee .book:active { width:130px !important; }
+  .marquee .book-wrap:has(.book.is-touch-preview) {
     width:140px !important;
     margin-right:8px !important;
     z-index:20;
