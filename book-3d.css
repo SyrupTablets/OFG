@@ -19,6 +19,15 @@
 .book:hover { transform: rotateY(6deg) translateY(-19px) translateZ(35px) !important; filter:saturate(1.06) contrast(1.02); }
 .book:hover > .book-spine { transform:translateZ(10px) rotateY(-52deg) scaleX(1.22); clip-path:polygon(0 3.5%, 100% 0, 100% 100%, 0 96.5%); }
 .book > .book-spine::after { content:none; }
+/* A filter on the 3D parent flattens its children, even with preserve-3d.
+   Keep the book unfiltered through hover and the entire return transition so
+   the counter-rotating spine remains a separate, visible face. */
+.marquee .book,
+.marquee .book:hover,
+.marquee .book.is-touch-preview {
+  filter:none !important;
+  transition:transform .72s cubic-bezier(.16,.86,.18,1) !important;
+}
 /* Private commissions keep the same book-shelf motion; only their click-through is disabled. */
 .book--private { --shelf-spine-width:26px; cursor:pointer; }
 .book--private:hover { transform: rotateY(6deg) translateY(-19px) translateZ(35px) !important; filter:saturate(1.06) contrast(1.02); }
