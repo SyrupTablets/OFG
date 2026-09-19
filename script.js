@@ -291,7 +291,7 @@ function openProject(project) {
 }
 window.refreshOpenProjectLanguage = () => { if (activeProject && !articleModal.hidden) openProject(activeProject); };
 
-fetch('projects.json?v=20260904-p33').then((response) => response.json()).then((projects) => {
+fetch('projects.json?v=20260919-p34').then((response) => response.json()).then((projects) => {
   // Two client-private commissions use the same presentation template, while
   // keeping the research itself deliberately undisclosed.
   projects.push(
