@@ -298,16 +298,26 @@ fetch('projects.json?v=20260919-p34').then((response) => response.json()).then((
     { id: 'p31', title: '', body: 'Some books prefer to stay a little private.\n有些研究选择被阅读，有些选择暂时保留一点神秘。\n\n应作者意愿，研究内容不完全公开，但它的封面很乐意和大家见面。', images: [], color: '#b8d7d2', private: true },
     { id: 'p32', title: '', body: 'Some books prefer to stay a little private.\n有些研究选择被阅读，有些选择暂时保留一点神秘。\n\n应作者意愿，研究内容不完全公开，但它的封面很乐意和大家见面。', images: [], color: '#f18b20', private: true }
   );
-  const getHueOrder = (hex) => {
+  const getColourSort = (hex) => {
     const rgb = hex.match(/[a-f\d]{2}/gi).map((part) => parseInt(part, 16) / 255);
     const max = Math.max(...rgb); const min = Math.min(...rgb); const chroma = max - min;
     const lightness = (max + min) / 2;
-    if (chroma < .12) return lightness < .35 ? 900 : 950;
+    const saturation = chroma === 0 ? 0 : chroma / (1 - Math.abs(2 * lightness - 1));
+    if (saturation < .08) return [6, lightness, 0];
     let hue = 0;
     if (max === rgb[0]) hue = ((rgb[1] - rgb[2]) / chroma + 6) % 6;
     else if (max === rgb[1]) hue = (rgb[2] - rgb[0]) / chroma + 2;
     else hue = (rgb[0] - rgb[1]) / chroma + 4;
-    return hue * 60;
+    hue *= 60;
+    // Stable colour families keep pale and saturated versions together. In
+    // particular, cyan and blue form one uninterrupted shelf section.
+    const family = hue < 20 || hue >= 330 ? 0
+      : hue < 50 ? 1
+      : hue < 80 ? 2
+      : hue < 170 ? 3
+      : hue < 260 ? 4
+      : 5;
+    return [family, hue, lightness];
   };
   const getFrameColour = (hex) => {
     const rgb = hex.match(/[a-f\d]{2}/gi).map((part) => parseInt(part, 16) / 255);
@@ -322,7 +332,10 @@ fetch('projects.json?v=20260919-p34').then((response) => response.json()).then((
     const distance = (a, b) => Math.abs(((a - b + 180) % 360) - 180);
     return palette.reduce((nearest, item) => distance(hue, item.hue) < distance(hue, nearest.hue) ? item : nearest).colour;
   };
-  projects.sort((a, b) => getHueOrder(a.color) - getHueOrder(b.color));
+  projects.sort((a, b) => {
+    const aa = getColourSort(a.color); const bb = getColourSort(b.color);
+    return aa[0] - bb[0] || aa[1] - bb[1] || aa[2] - bb[2] || a.id.localeCompare(b.id);
+  });
   const splitBookAsset = (id, face) => {
     if (id === 'p31' || id === 'p32') {
       const fileId = id === 'p31' ? 'P31' : 'P32';
@@ -331,19 +344,21 @@ fetch('projects.json?v=20260919-p34').then((response) => response.json()).then((
     const fileFace = id === 'p21' && face === 'spine' ? 'spin' : face;
     return `assets/books/${encodeURIComponent('拆分封面封底')}/${id}-${fileFace}.jpg`;
   };
+  const shelfBookAsset = (id, face) => `assets/shelf/${id}-${face}.webp`;
   const bookMarkup = (project, index, className = '') => {
     // Keep every cover facing the reader with its spine subtly exposed.
     const turns = [-27, -24, -21, -18, -15, -12, -9, -6];
     const turn = turns[index % turns.length];
     const isPrivate = Boolean(project.private);
     const state = isPrivate ? ' book--private' : '';
-    return `<button class="book ${className}${state}" type="button" data-project="${project.id}" data-front="${splitBookAsset(project.id, 'front')}" data-spine="${splitBookAsset(project.id, 'spine')}" style="--book-turn:${turn}deg;--book-colour:${project.color};--frame-colour:${getFrameColour(project.color)}" aria-label="${project.private ? '查看私密委托作品' : `查看项目 ${escapeHtml(project.title)}`}"><span class="book-back" aria-hidden="true"></span><span class="book-spine" aria-hidden="true"></span><span class="book-front" aria-hidden="true"></span><span class="book-pages" aria-hidden="true"></span><span class="book-label">${project.id.slice(1).padStart(2, '0')} / OFG</span></button>`;
+    return `<button class="book ${className}${state}" type="button" data-project="${project.id}" data-front="${shelfBookAsset(project.id, 'front')}" data-spine="${shelfBookAsset(project.id, 'spine')}" style="--book-turn:${turn}deg;--book-colour:${project.color};--frame-colour:${getFrameColour(project.color)}" aria-label="${project.private ? '查看私密委托作品' : `查看项目 ${escapeHtml(project.title)}`}"><span class="book-back" aria-hidden="true"></span><span class="book-spine" aria-hidden="true"></span><span class="book-front" aria-hidden="true"></span><span class="book-pages" aria-hidden="true"></span><span class="book-label">${project.id.slice(1).padStart(2, '0')} / OFG</span></button>`;
   };
   // Three identical sequences make the physical shelf continuously draggable in either direction.
   const cards = Array.from({ length: shelfCopies }, () => projects).flat().map((project, index) => `<article class="book-wrap">${bookMarkup(project, index)}</article>`).join('');
   track.innerHTML = cards;
-  // The previous shelf requested every large cover and spine at once (over 90 MB).
-  // Hydrate only books that are about to enter the visible strip, then retain them.
+  // Shelf artwork is a dedicated 1.5 MB thumbnail set (instead of 65 MB of
+  // print-resolution covers). Visible books hydrate first; the rest warm the
+  // browser cache during idle time so later scrolling remains instant.
   const hydrateBook = (button) => {
     if (button.dataset.hydrated) return;
     button.dataset.hydrated = 'true';
@@ -363,6 +378,16 @@ fetch('projects.json?v=20260919-p34').then((response) => response.json()).then((
     bookButtons.forEach((button) => assetObserver.observe(button.closest('.book-wrap')));
   } else bookButtons.forEach(hydrateBook);
   bookButtons.forEach((button) => button.addEventListener('pointerenter', () => hydrateBook(button), { once: true }));
+  const warmShelf = () => {
+    const unique = new Map();
+    bookButtons.forEach((button) => {
+      [button.dataset.front, button.dataset.spine].forEach((src) => unique.set(src, src));
+      hydrateBook(button);
+    });
+    unique.forEach((src) => { const image = new Image(); image.decoding = 'async'; image.src = src; });
+  };
+  if ('requestIdleCallback' in window) requestIdleCallback(warmShelf, { timeout: 1200 });
+  else setTimeout(warmShelf, 350);
   // Bind directly to each book: a real click opens its article immediately, while a
   // drag still suppresses only the release-click generated by that drag.
   bookButtons.forEach((button) => {
