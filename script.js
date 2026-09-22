@@ -299,6 +299,19 @@ fetch('projects.json?v=20260923-p35').then((response) => response.json()).then((
     { id: 'p31', title: '', body: 'Some books prefer to stay a little private.\n有些研究选择被阅读，有些选择暂时保留一点神秘。\n\n应作者意愿，研究内容不完全公开，但它的封面很乐意和大家见面。', images: [], color: '#b8d7d2', private: true },
     { id: 'p32', title: '', body: 'Some books prefer to stay a little private.\n有些研究选择被阅读，有些选择暂时保留一点神秘。\n\n应作者意愿，研究内容不完全公开，但它的封面很乐意和大家见面。', images: [], color: '#f18b20', private: true }
   );
+  // Measured from the actual front-cover artwork (small bleed margins removed).
+  // Keep this separate from project.color, which controls the article palette.
+  const coverSortColours = {
+    p01: '#b1bbc1', p02: '#b1c1c2', p03: '#c1c5be', p04: '#2a6850',
+    p05: '#c9bea0', p06: '#99ad9e', p07: '#c48c9a', p08: '#cadcd8',
+    p09: '#191421', p10: '#a5cece', p11: '#282828', p12: '#42b1be',
+    p13: '#d0cfc7', p14: '#cfd3d8', p15: '#edf3f7', p16: '#b3d1c5',
+    p17: '#6fc0c5', p18: '#846383', p19: '#9bb2ae', p20: '#739781',
+    p21: '#f1a2a9', p22: '#f6b78b', p23: '#ad857c', p24: '#c2bdb3',
+    p25: '#d3c9ae', p26: '#a19273', p27: '#d2c9c4', p28: '#e2d4be',
+    p29: '#a8cbc8', p30: '#dadbd0', p31: '#c6ceb6', p32: '#c69551',
+    p33: '#28658b', p34: '#f5b47e', p35: '#386fa9'
+  };
   const getColourSort = (hex) => {
     const rgb = hex.match(/[a-f\d]{2}/gi).map((part) => parseInt(part, 16) / 255);
     const max = Math.max(...rgb); const min = Math.min(...rgb); const chroma = max - min;
@@ -334,7 +347,8 @@ fetch('projects.json?v=20260923-p35').then((response) => response.json()).then((
     return palette.reduce((nearest, item) => distance(hue, item.hue) < distance(hue, nearest.hue) ? item : nearest).colour;
   };
   projects.sort((a, b) => {
-    const aa = getColourSort(a.color); const bb = getColourSort(b.color);
+    const aa = getColourSort(coverSortColours[a.id] || a.color);
+    const bb = getColourSort(coverSortColours[b.id] || b.color);
     return aa[0] - bb[0] || aa[1] - bb[1] || aa[2] - bb[2] || a.id.localeCompare(b.id);
   });
   const splitBookAsset = (id, face) => {
@@ -352,7 +366,8 @@ fetch('projects.json?v=20260923-p35').then((response) => response.json()).then((
     const turn = turns[index % turns.length];
     const isPrivate = Boolean(project.private);
     const state = isPrivate ? ' book--private' : '';
-    return `<button class="book ${className}${state}" type="button" data-project="${project.id}" data-front="${shelfBookAsset(project.id, 'front')}" data-spine="${shelfBookAsset(project.id, 'spine')}" style="--book-turn:${turn}deg;--book-colour:${project.color};--frame-colour:${getFrameColour(project.color)}" aria-label="${project.private ? '查看私密委托作品' : `查看项目 ${escapeHtml(project.title)}`}"><span class="book-back" aria-hidden="true"></span><span class="book-spine" aria-hidden="true"></span><span class="book-front" aria-hidden="true"></span><span class="book-pages" aria-hidden="true"></span><span class="book-label">${project.id.slice(1).padStart(2, '0')} / OFG</span></button>`;
+    const shelfColour = coverSortColours[project.id] || project.color;
+    return `<button class="book ${className}${state}" type="button" data-project="${project.id}" data-front="${shelfBookAsset(project.id, 'front')}" data-spine="${shelfBookAsset(project.id, 'spine')}" style="--book-turn:${turn}deg;--book-colour:${shelfColour};--frame-colour:${getFrameColour(shelfColour)}" aria-label="${project.private ? '查看私密委托作品' : `查看项目 ${escapeHtml(project.title)}`}"><span class="book-back" aria-hidden="true"></span><span class="book-spine" aria-hidden="true"></span><span class="book-front" aria-hidden="true"></span><span class="book-pages" aria-hidden="true"></span><span class="book-label">${project.id.slice(1).padStart(2, '0')} / OFG</span></button>`;
   };
   // Three identical sequences make the physical shelf continuously draggable in either direction.
   const cards = Array.from({ length: shelfCopies }, () => projects).flat().map((project, index) => `<article class="book-wrap">${bookMarkup(project, index)}</article>`).join('');
