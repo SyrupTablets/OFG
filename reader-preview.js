@@ -1,6 +1,6 @@
 (() => {
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const face=(id,part)=>`assets/books/${encodeURIComponent('拆分封面封底')}/${['p31','p32'].includes(id)?id.toUpperCase()+'%20'+part:id+'-'+(id==='p21'&&part==='spine'?'spin':part)}.jpg`;
+  const face=(id,part)=>`assets/books/${encodeURIComponent('拆分封面封底')}/${['p31','p32'].includes(id)?id.toUpperCase()+'%20'+part:id+'-'+(id==='p21'&&part==='spine'?'spin':part)}.jpg${id==='p35'?'?v=20260923-trim':''}`;
   const textures=['linen','vertical-ribbed','cotton-pulp','coated','book-cloth','lychee-leather','debossed-board'];
   const textureFor=id=>textures[(Math.max(1,parseInt(String(id).replace(/\D/g,''),10)||1)-1)%textures.length];
   const decorateShelf=()=>document.querySelectorAll('.book[data-project]').forEach(book=>{book.dataset.texture=textureFor(book.dataset.project)});

@@ -35,7 +35,7 @@ const heroArtSources = [
   ['assets/background-art/projects/safe-p29-1.jpg', '50% 52%', '155%'],
   ['assets/background-art/projects/safe-p30-1.jpg', '50% 50%', '155%'],
   ['assets/background-art/projects/safe-p33-1.jpg', '50% 54%', '155%'],
-  ['assets/background-art/projects/safe-p35-1.webp', '50% 48%', '155%']
+  ['assets/background-art/projects/safe-p35-1.webp?v=20260923-trim', '50% 48%', '155%']
 ];
 document.querySelectorAll('[data-art-block]').forEach((block, blockIndex) => {
   let previous = -1;
@@ -352,14 +352,15 @@ fetch('projects.json?v=20260923-p35').then((response) => response.json()).then((
     return aa[0] - bb[0] || aa[1] - bb[1] || aa[2] - bb[2] || a.id.localeCompare(b.id);
   });
   const splitBookAsset = (id, face) => {
+    const version = id === 'p35' ? '?v=20260923-trim' : '';
     if (id === 'p31' || id === 'p32') {
       const fileId = id === 'p31' ? 'P31' : 'P32';
-      return `assets/books/${encodeURIComponent('拆分封面封底')}/${fileId}%20${face}.jpg`;
+      return `assets/books/${encodeURIComponent('拆分封面封底')}/${fileId}%20${face}.jpg${version}`;
     }
     const fileFace = id === 'p21' && face === 'spine' ? 'spin' : face;
-    return `assets/books/${encodeURIComponent('拆分封面封底')}/${id}-${fileFace}.jpg`;
+    return `assets/books/${encodeURIComponent('拆分封面封底')}/${id}-${fileFace}.jpg${version}`;
   };
-  const shelfBookAsset = (id, face) => `assets/shelf/${id}-${face}.webp`;
+  const shelfBookAsset = (id, face) => `assets/shelf/${id}-${face}.webp${id === 'p35' ? '?v=20260923-trim' : ''}`;
   const bookMarkup = (project, index, className = '') => {
     // Keep every cover facing the reader with its spine subtly exposed.
     const turns = [-27, -24, -21, -18, -15, -12, -9, -6];
