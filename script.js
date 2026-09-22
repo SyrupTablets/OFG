@@ -34,7 +34,8 @@ const heroArtSources = [
   ['assets/background-art/projects/safe-p27-2.jpg', '50% 50%', '160%'],
   ['assets/background-art/projects/safe-p29-1.jpg', '50% 52%', '155%'],
   ['assets/background-art/projects/safe-p30-1.jpg', '50% 50%', '155%'],
-  ['assets/background-art/projects/safe-p33-1.jpg', '50% 54%', '155%']
+  ['assets/background-art/projects/safe-p33-1.jpg', '50% 54%', '155%'],
+  ['assets/background-art/projects/safe-p35-1.webp', '50% 48%', '155%']
 ];
 document.querySelectorAll('[data-art-block]').forEach((block, blockIndex) => {
   let previous = -1;
@@ -291,7 +292,7 @@ function openProject(project) {
 }
 window.refreshOpenProjectLanguage = () => { if (activeProject && !articleModal.hidden) openProject(activeProject); };
 
-fetch('projects.json?v=20260919-p34').then((response) => response.json()).then((projects) => {
+fetch('projects.json?v=20260923-p35').then((response) => response.json()).then((projects) => {
   // Two client-private commissions use the same presentation template, while
   // keeping the research itself deliberately undisclosed.
   projects.push(
