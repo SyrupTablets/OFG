@@ -35,7 +35,8 @@ const heroArtSources = [
   ['assets/background-art/projects/safe-p29-1.jpg', '50% 52%', '155%'],
   ['assets/background-art/projects/safe-p30-1.jpg', '50% 50%', '155%'],
   ['assets/background-art/projects/safe-p33-1.jpg', '50% 54%', '155%'],
-  ['assets/background-art/projects/safe-p35-1.webp?v=20260923-trim', '50% 48%', '155%']
+  ['assets/background-art/projects/safe-p35-1.webp?v=20260923-trim', '50% 48%', '155%'],
+  ['assets/background-art/projects/safe-p36-1.webp', '50% 48%', '155%']
 ];
 document.querySelectorAll('[data-art-block]').forEach((block, blockIndex) => {
   let previous = -1;
@@ -292,7 +293,7 @@ function openProject(project) {
 }
 window.refreshOpenProjectLanguage = () => { if (activeProject && !articleModal.hidden) openProject(activeProject); };
 
-fetch('projects.json?v=20260923-p35').then((response) => response.json()).then((projects) => {
+fetch('projects.json?v=20261008-p36').then((response) => response.json()).then((projects) => {
   // Two client-private commissions use the same presentation template, while
   // keeping the research itself deliberately undisclosed.
   projects.push(
@@ -310,7 +311,7 @@ fetch('projects.json?v=20260923-p35').then((response) => response.json()).then((
     p21: '#f1a2a9', p22: '#f6b78b', p23: '#ad857c', p24: '#c2bdb3',
     p25: '#d3c9ae', p26: '#a19273', p27: '#d2c9c4', p28: '#e2d4be',
     p29: '#a8cbc8', p30: '#dadbd0', p31: '#c6ceb6', p32: '#c69551',
-    p33: '#28658b', p34: '#f5b47e', p35: '#386fa9'
+    p33: '#28658b', p34: '#f5b47e', p35: '#386fa9', p36: '#c19866'
   };
   const getColourSort = (hex) => {
     const rgb = hex.match(/[a-f\d]{2}/gi).map((part) => parseInt(part, 16) / 255);
