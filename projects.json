@@ -337,14 +337,14 @@
   {
     "id": "p37",
     "title": "🎼音乐项目｜Between Paraguay & The Netherlands 歌词册",
-    "body": "这是为朋友 Romy 的 research concert《Between Paraguay & The Netherlands》设计的一本歌词册。音乐会以巴拉圭与荷兰之间的文化往来为线索，十首歌曲串联起瓜拉尼语、西班牙语、葡萄牙语、荷兰语与英语，让观众一边听见不同地域的声音，一边借由歌词与翻译理解它们背后的记忆、身份与情感。\n\n设计把整本册子变成一本可以随音乐旅行的“护照”：地图标出每首歌的出发地与路线，颜色系统区分不同语言，后续页面则让原文与英文译文并排出现。它既是演出现场的歌词本，也是 Romy 研究音乐、语言与跨文化连接的一份可阅读记录。\n\n很开心能为朋友 Romy 的 research concert 完成这本小册子。愿这些歌在舞台上跨过语言的边界，也在每一位听众手里留下属于那一晚的旅程。",
+    "body": "这是为朋友 Romy 的 research concert《Between Paraguay & The Netherlands》完成的一本歌词册。音乐会以巴拉圭与荷兰之间的文化往来为线索，十首歌曲串联起瓜拉尼语、西班牙语、葡萄牙语、荷兰语与英语，让观众一边听见不同地域的声音，一边借由歌词与翻译理解它们背后的记忆、身份与情感。\n\n封面与封底由 Romy 自己使用 AI 制作并提供；我的工作是在她已有视觉的基础上提出设计建议，并负责整本册子的内容规划、信息结构与版式排版。内页被组织成一本可以随音乐旅行的“护照”：地图标出每首歌的出发地与路线，颜色系统区分不同语言，后续页面则让原文与英文译文并排出现。它既是演出现场的歌词本，也是 Romy 研究音乐、语言与跨文化连接的一份可阅读记录。\n\n很开心能为朋友 Romy 的 research concert 完成这本小册子。愿这些歌在舞台上跨过语言的边界，也在每一位听众手里留下属于那一晚的旅程。",
     "images": [
       "assets/projects/p37-pages/page-01.jpg",
       "assets/projects/p37-pages/page-03.jpg",
       "assets/projects/p37-pages/page-24.jpg"
     ],
+    "readerLeadingBlank": true,
     "readerPages": [
-      "assets/projects/p37-pages/page-01.jpg",
       "assets/projects/p37-pages/page-02.jpg",
       "assets/projects/p37-pages/page-03.jpg",
       "assets/projects/p37-pages/page-04.jpg",
@@ -366,10 +366,9 @@
       "assets/projects/p37-pages/page-20.jpg",
       "assets/projects/p37-pages/page-21.jpg",
       "assets/projects/p37-pages/page-22.jpg",
-      "assets/projects/p37-pages/page-23.jpg",
-      "assets/projects/p37-pages/page-24.jpg"
+      "assets/projects/p37-pages/page-23.jpg"
     ],
-    "readerEndNote": "FOR ROMY\n\nThis lyric booklet was created for my friend Romy’s research concert, Between Paraguay & The Netherlands. It brings the songs, translations, languages and places of the performance together in one small book - a companion for listening, following the journey and remembering the evening.\n\n这本歌词册是为朋友 Romy 的 research concert《Between Paraguay & The Netherlands》而设计。它把演出中的歌曲、翻译、语言与地理线索收进一本可以随音乐翻阅的小册子里，既陪伴现场聆听，也为那一晚留下一份可以被带走的记忆。",
+    "readerEndNote": "FOR ROMY\n\nThis lyric booklet was created for my friend Romy’s research concert, Between Paraguay & The Netherlands. Romy created the front and back covers herself with AI and supplied the finished artwork; the cover artwork is not my design. My role was to offer design guidance and to plan, structure and typeset the booklet as a complete reading experience.\n\n这本歌词册是为朋友 Romy 的 research concert《Between Paraguay & The Netherlands》而完成。封面与封底由 Romy 自己使用 AI 制作并提供，并非由我设计；我的工作是在她已有视觉的基础上提供设计建议，并负责整本册子的内容规划、信息结构与版式排版，让歌曲、翻译、语言与地理线索成为一段可以随音乐翻阅的旅程。",
     "color": "#eee7d8",
     "published": "2026.11.18"
   }
